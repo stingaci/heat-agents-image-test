@@ -1,0 +1,80 @@
+heat_template_version: 2015-10-15
+
+description: >
+  This templates tests weather or not the supplied image contains the required agents 
+  namely os-collect-config, os-refresh-config, os-apply-config and heat-engine by 
+  attempting to deploy software configurations via SoftwareDeployments. If this 
+  image does contain these agents, the stack creation should succed with status of 
+  CREATE_COMPLETE, otherwise it will remain in CREATE_IN_PROGRESS state until a 
+  timeout occurs and the last state will be CREATE_FAILED. The transport method 
+  tested in this is HEAT_SIGNAL.  
+
+parameters:
+  image:
+    label: Server Image
+    description: This parameter should be an image defined in glance.
+    type: string
+    constraints:
+      - custom_constraint: glance.image
+
+  flavor:
+    label: Instance Flavor
+    description: Paramter that defines what type of flavor this instance will launch as
+    type: string
+    default: m1.small
+    constraints:
+      - custom_constraint: nova.flavor
+
+  ssh_key:
+    label: SSH Key to be injected into instance
+    description: Parameter that defines which keypair should be injected into the instance
+    type: string
+    default: user_key
+    constraints:
+      - custom_constraint: nova.keypair
+
+  security_group:
+    label: Security Group Name
+    type: string 
+
+  network_name:
+    label: Network Name
+    type: string
+    default: user_net
+    constraints:
+      - custom_constraint: neutron.network
+
+resources:
+
+  message:
+    type: OS::Heat::SoftwareConfig
+    properties:
+      group: script
+      config: |
+        #!/bin/bash
+        echo "Hello World" > /tmp/hello
+            
+  instance_config:
+    type: OS::Heat::SoftwareDeployment
+    properties:
+      config: { get_resource: message }
+      server: { get_resource: instance }
+      signal_transport: HEAT_SIGNAL
+
+  instance:
+    type: OS::Nova::Server
+    properties:
+      name: sd_test 
+      image: { get_param: image }
+      security_groups: 
+        - { get_param: security_group }
+      key_name: { get_param: ssh_key }
+      flavor: { get_param: flavor }
+      networks: 
+        - network: { get_param: network_name }
+      software_config_transport: POLL_SERVER_HEAT
+      user_data_format: SOFTWARE_CONFIG
+
+outputs:
+  ipaddr:
+    value: { get_attr: [ instance, first_address ] }
