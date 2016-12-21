@@ -17,7 +17,8 @@ This template effectively tests weather or not these agents exist on the image. 
 
 You can create a stack with this template as follows:
 
-.. code:: bash
+.. code-block:: bash
+
   os stack create -t no_agent_install.yaml \
     --parameter image="Centos 7" \
     --parameter network_name=my_net \
@@ -32,7 +33,8 @@ This template leverages cloud-init in order to install these agents and upon a s
 
 You can create a stack with this template as follows:
 
-.. code:: bash
+.. code-block:: bash
+
   os stack create -t with_agent_install.yaml \
     -e software-config/boot-config/centos7_rdo_env.yaml \
     --parameter image="Centos 7" \
