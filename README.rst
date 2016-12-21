@@ -17,12 +17,13 @@ This template effectively tests weather or not these agents exist on the image. 
 
 You can create a stack with this template as follows:
 
-``os stack create -t no_agent_install.yaml \
+.. code:: bash
+  os stack create -t no_agent_install.yaml \
     --parameter image="Centos 7" \
     --parameter network_name=my_net \
     --parameter security_group=my_sg \
     --parameter ssh_key=my_key \
-    no_agent_install``
+    no_agent_install
 
 with_agent_install.yaml
 -----------------------
@@ -31,12 +32,13 @@ This template leverages cloud-init in order to install these agents and upon a s
 
 You can create a stack with this template as follows:
 
-``os stack create -t with_agent_install.yaml \
+.. code:: bash
+  os stack create -t with_agent_install.yaml \
     -e software-config/boot-config/centos7_rdo_env.yaml \
     --parameter image="Centos 7" \
     --parameter network_name=my_net \
     --parameter security_group=my_sg \
     --parameter ssh_key=my_key \
-    with_agent_install``
+    with_agent_install
 
 An important point to mention here is the choice in environment. The chosen environment **must** match the image you are using. In my case I used the *Centos 7* and thus I used the *centos7_rdo_env* environment. 
