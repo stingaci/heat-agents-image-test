@@ -44,3 +44,5 @@ You can create a stack with this template as follows:
     with_agent_install
 
 An important point to mention here is the choice in environment. The chosen environment **must** match the image you are using. In my case I used the *Centos 7* and thus I used the *centos7_rdo_env* environment. 
+
+*Note* The software config folder was taken from a larger repo found `here <https://github.com/openstack/heat-templates>`_
