@@ -1,12 +1,26 @@
 heat_template_version: 2014-10-16
 
+parameters:
+  http_proxy:
+    type: string
+    default: "None"
+    
+  https_proxy:
+    type: string
+    default: "None"
+
 resources:
 
   install_config_agent_rdo:
     type: "OS::Heat::SoftwareConfig"
     properties:
       group: ungrouped
-      config: {get_file: fragments/install_config_agent_rdo.sh}
+      config:
+        str_replace:
+          params:
+            $http_proxy_val: { get_param: http_proxy }
+            $https_proxy_val: { get_param: https_proxy }
+          template: {get_file: fragments/install_config_agent_rdo.sh}
 
   configure_config_agent:
     type: "OS::Heat::SoftwareConfig"

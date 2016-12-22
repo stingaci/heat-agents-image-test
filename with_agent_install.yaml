@@ -63,6 +63,9 @@ resources:
 
   boot_config:
     type: Heat::InstallConfigAgent
+    properties:
+      http_proxy: http://127.0.0.3:80
+      https_proxy: http://127.0.0.3:443
 
   instance:
     type: OS::Nova::Server
